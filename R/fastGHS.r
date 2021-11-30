@@ -8,6 +8,10 @@
 #' @param Lambda_sq initial value of matrix of squared local shrinkage parameters
 #' @param tau_sq initial value of squared global shrinkage parameter. If variables are grouped, a \eqn{ngroup} by \eqn{ngroup} matrix
 #' @param method the method to use. Default is \eqn{ECM}. Other options include \eqn{ICM}
+#' @param AIC_selection logical. Should the global shrinkage parameters be selected with AIC?
+#' @param AIC_eps if AIC_selection == TRUE, the convergence tolerance for the AIC convergence assessment
+#' @param tau_sq_min if AIC_selection == TRUE, the smallest value of tau_sq to consider  
+#' @param tau_sq_stepsize if AIC_selection == TRUE, the step-size to use in the grid for tau_sq. Optional argument
 #' @param epsilon tolerance for the convergence assessment
 #' @param maxitr maximum number of iterations
 #' @param verbose logical indicator of printing information at each iteration
@@ -20,7 +24,8 @@
 #' @return a fitted EMGS object
 #' @export 
 #' 
-fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, method= 'ECM',epsilon = 1e-5, maxitr = 1e5, verbose=TRUE, savepath = FALSE,  group=NULL, save_Q = F, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE){
+fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, method= 'ECM', AIC_selection=FALSE, AIC_eps = 1e-1, tau_sq_min =1e-4, tau_sq_stepsize= NULL,
+                    epsilon = 1e-5, maxitr = 1e5, verbose=TRUE, savepath = FALSE,  group=NULL, save_Q = F, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE){
 
   # It the GHS-like penalty is used, tau_sq represents the fixed shrinkage parameter 'a' and N is the matrix of nu_ij's
   
@@ -49,8 +54,7 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
       cat('Initial theta not symmetric, forcing symmetry...')
     }
     if(ncol(theta)!= p | nrow(theta)!=p | !matrixcalc::is.positive.definite(theta+0)){
-      cat('Error: initial theta must be pxp and positive definite \n')
-      return()
+      stop('Initial theta must be pxp and positive definite \n')
     } 
   }
   if(is.null(sigma)){
@@ -62,8 +66,7 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
       cat('Initial sigma not symmetric, forcing symmetry...\n')
     }
     if(ncol(sigma)!= p | nrow(sigma)!=p | !matrixcalc::is.positive.definite(as.matrix(sigma+0))){
-      cat('Error: initial sigma must be pxp and positive definite \n')
-      return()
+      stop('Initial sigma must be pxp and positive definite \n')
     } 
   }
   if(is.null(Lambda_sq)){
@@ -71,8 +74,7 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
   }
   else{
     if(any(Lambda_sq<0)){
-      cat('Error: negative Lambda_sq values are not allowed \n')
-      return()
+      stop('Negative Lambda_sq values are not allowed \n')
     } 
   }
 
@@ -93,16 +95,14 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
     }
     else{
       if(tau_sq<0){
-        cat('Error: negative tau_sq is not allowed \n')
-        return()
+        stop('Negative tau_sq is not allowed \n')
       }
     }
     Tau_sq = S # Dummy variable
   }
   else{
     if(length(group)!=ncol(X)){
-      cat('Error: number of group assignments and variables must match \n')
-      return()
+      stop('Number of group assignments and variables must match \n')
     }
     group <- match(group, unique(group)) - 1
     exist.group <- length(unique(group))
@@ -119,8 +119,7 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
     }
     else{
       if(tau_sq<0){
-        cat('Error: negative tau_sq is not allowed \n')
-        return()
+        stop('Negative tau_sq is not allowed \n')
       }
       Tau_sq = tau_sq;
     }
