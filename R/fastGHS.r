@@ -27,7 +27,7 @@
 fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, method= 'ECM', AIC_selection=FALSE, AIC_eps = 1e-1, tau_sq_min =1e-4, tau_sq_stepsize= NULL,
                     epsilon = 1e-5, maxitr = 1e5, verbose=TRUE, savepath = FALSE,  group=NULL, save_Q = F, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE){
 
-  # It the GHS-like penalty is used, tau_sq represents the fixed shrinkage parameter 'a' and N is the matrix of nu_ij's
+  # If the GHS-like penalty is used, tau_sq represents the fixed shrinkage parameter 'a' and N is the matrix of nu_ij's
   
   if(GHS_like){
     fix_tau = TRUE # a is not to be updated
@@ -126,15 +126,31 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
     tau_sq = 1; # Dummy variable
   }
   machine_eps = .Machine$double.eps
-  if(method=='ECM'){
-    out <- ECM_GHS(as.matrix(X), S, theta , sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist.group, group, N_groups, save_Q,tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, fix_tau = fix_tau, GHS_like = GHS_like, stop_underflow=stop_underflow)
+  
+  if(!method %in% c('ECM', 'ICM') ){
+    stop('Method must be either ECM or ICM')
   }
-  else if(method=='ICM'){
-    out <- ECM_GHS(as.matrix(X), S, theta , sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist.group, group, N_groups, save_Q,tau_sq, Tau_sq, machine_eps, use_ICM = TRUE, fix_tau = fix_tau, GHS_like = GHS_like, stop_underflow=stop_underflow)
+  use_ICM = method=='ICM'
+  
+  if(AIC_selection){
+    if(is.null(tau_sq_min)){
+      tau_sq_min = 1e-3
+    }
+    if(is.null(tau_sq_stepsize)){
+      tau_sq_vec = seq(tau_sq_min,20,by=2e-1)
+    }
+    else{
+      tau_sq_vec = seq(tau_sq_min,20,by=tau_sq_stepsize)
+    }
+    out <- ECM_GHS_AIC(as.matrix(X), S, theta , sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist.group, group, N_groups, save_Q,tau_sq, Tau_sq, machine_eps, use_ICM = use_ICM, GHS_like = GHS_like, stop_underflow=stop_underflow)
+    out$AIC_scores = out$AIC_scores[1:out$ind]
+    out$tau_sq_vals = tau_sq_vec[1:out$ind] 
   }
-  else {
-    out <- NULL
+  else{
+    out <- ECM_GHS(as.matrix(X), S, theta , sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist.group, group, N_groups, save_Q,tau_sq, Tau_sq, machine_eps, use_ICM = use_ICM, fix_tau = fix_tau, GHS_like = GHS_like, stop_underflow=stop_underflow)
   }
+
+  
   
   # Save outputs
   out$epsilon = epsilon

@@ -20,7 +20,6 @@ using namespace arma;
 
 
 
-
 //' Perform GHS with ECM
 //' 
 //' This function performs expectation-conditional-maximation or iterated conditional mode estimation for the graphical horseshoe

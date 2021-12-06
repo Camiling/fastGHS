@@ -11,6 +11,10 @@ fastGHS(
   Lambda_sq = NULL,
   tau_sq = NULL,
   method = "ECM",
+  AIC_selection = FALSE,
+  AIC_eps = 0.1,
+  tau_sq_min = 1e-04,
+  tau_sq_stepsize = NULL,
   epsilon = 1e-05,
   maxitr = 1e+05,
   verbose = TRUE,
@@ -34,6 +38,14 @@ fastGHS(
 \item{tau_sq}{initial value of squared global shrinkage parameter. If variables are grouped, a \eqn{ngroup} by \eqn{ngroup} matrix}
 
 \item{method}{the method to use. Default is \eqn{ECM}. Other options include \eqn{ICM}}
+
+\item{AIC_selection}{logical. Should the global shrinkage parameters be selected with AIC?}
+
+\item{AIC_eps}{if AIC_selection == TRUE, the convergence tolerance for the AIC convergence assessment}
+
+\item{tau_sq_min}{if AIC_selection == TRUE, the smallest value of tau_sq to consider}
+
+\item{tau_sq_stepsize}{if AIC_selection == TRUE, the step-size to use in the grid for tau_sq. Optional argument}
 
 \item{epsilon}{tolerance for the convergence assessment}
 
