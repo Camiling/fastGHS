@@ -80,6 +80,10 @@ List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arm
     eps=abs(AIC_prev-AIC_update);
     AIC_prev = AIC_update;
     count++;
+    
+    if(verbose){
+      Rcout << "Itr = " << count << " AIC diff = " << eps << endl;
+    }
   }
   // Save final model
   list = res_GHS;

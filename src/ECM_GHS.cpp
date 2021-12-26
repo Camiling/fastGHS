@@ -179,12 +179,9 @@ List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::m
     count++;
     if(verbose){
       Rcout << "Itr = " << count << " Max diff = " << eps << endl;
-    }else{
-      Rcout << ".";
     }
   }
   theta = theta_update;
-  Rcout << " done" << endl;
   if(save_Q){
     Q_vals= Q_vals.head(count);
   }
