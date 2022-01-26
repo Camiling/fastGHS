@@ -2,7 +2,7 @@
 % Please edit documentation in R/fastGHS.r
 \name{fastGHS}
 \alias{fastGHS}
-\title{Perform GHS with ECM/ICM}
+\title{Perform GHS with ECM}
 \usage{
 fastGHS(
   X,
@@ -16,14 +16,15 @@ fastGHS(
   tau_sq_min = 1e-04,
   tau_sq_stepsize = NULL,
   epsilon = 1e-05,
-  maxitr = 1e+05,
+  maxitr = 10000,
   verbose = TRUE,
   savepath = FALSE,
   group = NULL,
   save_Q = F,
   fix_tau = FALSE,
   GHS_like = FALSE,
-  stop_underflow = FALSE
+  stop_underflow = FALSE,
+  weights = NA
 )
 }
 \arguments{
@@ -35,17 +36,17 @@ fastGHS(
 
 \item{Lambda_sq}{initial value of matrix of squared local shrinkage parameters}
 
-\item{tau_sq}{initial value of squared global shrinkage parameter. If variables are grouped, a \eqn{ngroup} by \eqn{ngroup} matrix}
+\item{tau_sq}{initial value of squared global shrinkage parameter. If variables are grouped, an \eqn{ngroup} by \eqn{ngroup} matrix}
 
-\item{method}{the method to use. Default is \eqn{ECM}. Other options include \eqn{ICM}}
+\item{method}{the method to use. Default is \code{ECM}. Other options include \code{ICM}}
 
 \item{AIC_selection}{logical. Should the global shrinkage parameters be selected with AIC?}
 
-\item{AIC_eps}{if AIC_selection == TRUE, the convergence tolerance for the AIC convergence assessment}
+\item{AIC_eps}{if \code{AIC_selection=TRUE}, the convergence tolerance for the AIC convergence assessment}
 
-\item{tau_sq_min}{if AIC_selection == TRUE, the smallest value of tau_sq to consider}
+\item{tau_sq_min}{if \code{AIC_selection=TRUE}, the smallest value of \code{tau_sq} to consider}
 
-\item{tau_sq_stepsize}{if AIC_selection == TRUE, the step-size to use in the grid for tau_sq. Optional argument}
+\item{tau_sq_stepsize}{if \code{AIC_selection=TRUE}, the step-size to use in the grid for \code{tau_sq}. Optional argument}
 
 \item{epsilon}{tolerance for the convergence assessment}
 
@@ -53,21 +54,23 @@ fastGHS(
 
 \item{verbose}{logical indicator of printing information at each iteration}
 
-\item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for p<200}
+\item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for \eqn{p<200}}
 
 \item{group}{grouping information, if variables are grouped. If provided, a vector of length \eqn{p} giving the group of each variable as a string, character or number.}
 
 \item{save_Q}{should the value of the objective function at each step be saved?}
 
-\item{fix_tau}{logical. Should tau be fixed?}
+\item{fix_tau}{logical. Should \code{tau_sq} be fixed?}
 
 \item{GHS_like}{logical. Should the GHS-like penalty be used?}
 
 \item{stop_underflow}{should underflow be avoided by never allowing doubles to be smaller than the machine precision?}
+
+\item{weights}{If provided, a vector of length \eqn{n} to weigh the obervations with.}
 }
 \value{
-a fitted EMGS object
+a fitted \code{fastGHS} object
 }
 \description{
-This function performs expectation-conditional-maximation or iterated conditional mode estimation for the graphical horseshoe
+This function performs expectation-conditional-maximation for the graphical horseshoe
 }

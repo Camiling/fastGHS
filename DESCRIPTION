@@ -8,7 +8,7 @@ Authors@R:
 Description: Compute the posterior modes in the graphical horseshoe using fast ECM or ICM algorithms.
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: R (>= 3.0.0)
 Imports: Rcpp (>= 1.0.6), RcppArmadillo, matrixcalc, Matrix
 LinkingTo: Rcpp, RcppArmadillo

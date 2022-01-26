@@ -58,6 +58,10 @@ List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arm
   // Initialise estimates
   double eps = 1000;
   int count = 0;
+  int maxitr_AIC = maxitr;
+  if(maxitr>tau_sq_vec.n_elem){
+    maxitr_AIC = tau_sq_vec.n_elem;
+  }
   arma::vec AIC_scores(maxitr);
   double AIC_prev = 1000000;
   double AIC_update;
@@ -65,7 +69,7 @@ List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arm
   List res_GHS;
   List list;
  
-  while(eps > AIC_eps & count < maxitr){
+  while(eps > AIC_eps & count < maxitr_AIC){
     // Tau value to use
     tau_sq_val = tau_sq_vec(count);
     
