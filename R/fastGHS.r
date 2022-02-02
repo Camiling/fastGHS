@@ -12,6 +12,7 @@
 #' @param AIC_eps if \code{AIC_selection=TRUE}, the convergence tolerance for the AIC convergence assessment
 #' @param tau_sq_min if \code{AIC_selection=TRUE}, the smallest value of \code{tau_sq} to consider  
 #' @param tau_sq_stepsize if \code{AIC_selection=TRUE}, the step-size to use in the grid for \code{tau_sq}. Optional argument
+#' @param tau_sq_max if \code{AIC_selection=TRUE}, the largest value of \code{tau_sq} to consider  
 #' @param epsilon tolerance for the convergence assessment
 #' @param maxitr maximum number of iterations
 #' @param verbose logical indicator of printing information at each iteration
@@ -25,7 +26,7 @@
 #' @return a fitted \code{fastGHS} object
 #' @export 
 #' 
-fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, method= 'ECM', AIC_selection=FALSE, AIC_eps = 1e-1, tau_sq_min =1e-4, tau_sq_stepsize= NULL,
+fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, method= 'ECM', AIC_selection=FALSE, AIC_eps = 1e-1, tau_sq_min =1e-4, tau_sq_stepsize= NULL, tau_sq_max = 20,
                     epsilon = 1e-5, maxitr = 1e4, verbose=TRUE, savepath = FALSE,  group=NULL, save_Q = F, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE, weights=NA){
 
   # If the GHS-like penalty is used, tau_sq represents the fixed shrinkage parameter 'a' and N is the matrix of nu_ij's
@@ -152,10 +153,10 @@ fastGHS <- function(X, theta=NULL,sigma=NULL,Lambda_sq=NULL, tau_sq = NULL, meth
       tau_sq_min = 1e-3
     }
     if(is.null(tau_sq_stepsize)){
-      tau_sq_vec = seq(tau_sq_min,20,by=2e-1)
+      tau_sq_vec = seq(tau_sq_min,tau_sq_max,by=2e-1)
     }
     else{
-      tau_sq_vec = seq(tau_sq_min,20,by=tau_sq_stepsize)
+      tau_sq_vec = seq(tau_sq_min,tau_sq_max,by=tau_sq_stepsize)
     }
     out <- ECM_GHS_AIC(as.matrix(X), as.matrix(S), theta , sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist.group, group, N_groups, save_Q,tau_sq, Tau_sq, machine_eps, use_ICM = use_ICM, GHS_like = GHS_like, stop_underflow=stop_underflow)
     out$AIC_scores = out$AIC_scores[1:out$ind]

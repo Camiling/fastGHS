@@ -15,6 +15,7 @@ fastGHS(
   AIC_eps = 0.1,
   tau_sq_min = 1e-04,
   tau_sq_stepsize = NULL,
+  tau_sq_max = 20,
   epsilon = 1e-05,
   maxitr = 10000,
   verbose = TRUE,
@@ -47,6 +48,8 @@ fastGHS(
 \item{tau_sq_min}{if \code{AIC_selection=TRUE}, the smallest value of \code{tau_sq} to consider}
 
 \item{tau_sq_stepsize}{if \code{AIC_selection=TRUE}, the step-size to use in the grid for \code{tau_sq}. Optional argument}
+
+\item{tau_sq_max}{if \code{AIC_selection=TRUE}, the largest value of \code{tau_sq} to consider}
 
 \item{epsilon}{tolerance for the convergence assessment}
 
