@@ -157,6 +157,11 @@ theta.est.fix2[1:5,1:5]
 res.fix2$tau_sq
 # 8.2001
 
+# Here Gibbs GHS fails:
+#ghs.res.fix <- GHS(t(x.sf.fix2)%*%x.sf.fix2,n.fix2,burnin=100,nmc=1000)
+#Error in mu_i + solve(inv_C_chol, rnorm(p - 1)) : 
+#  non-numeric argument to binary operator
+
 # Compare to the graphical lasso by forcing it to the same sparsity as the ECM GHS esitmate
 gg = huge(x.sf.fix2,method='glasso', lambda=0.2785)
 gg$sparsity
