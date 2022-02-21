@@ -25,39 +25,41 @@ fastGHS(
   fix_tau = FALSE,
   GHS_like = FALSE,
   stop_underflow = FALSE,
-  weights = NA
+  weights = NA,
+  savepath_tau = FALSE,
+  stop_overflow = FALSE
 )
 }
 \arguments{
-\item{X}{\eqn{n} by \eqn{p} matrix of data}
+\item{X}{\eqn{n} by \eqn{p} matrix of data.}
 
-\item{theta}{initial value of the \eqn{p} by \eqn{p} precision matrix}
+\item{theta}{initial value of the \eqn{p} by \eqn{p} precision matrix.}
 
-\item{sigma}{initial value of the \eqn{p} by \eqn{p} covariance matrix}
+\item{sigma}{initial value of the \eqn{p} by \eqn{p} covariance matrix.}
 
-\item{Lambda_sq}{initial value of matrix of squared local shrinkage parameters}
+\item{Lambda_sq}{initial value of matrix of squared local shrinkage parameters.}
 
-\item{tau_sq}{initial value of squared global shrinkage parameter. If variables are grouped, an \eqn{ngroup} by \eqn{ngroup} matrix}
+\item{tau_sq}{initial value of squared global shrinkage parameter. If variables are grouped, an \eqn{ngroup} by \eqn{ngroup} matrix.}
 
-\item{method}{the method to use. Default is \code{ECM}. Other options include \code{ICM}}
+\item{method}{the method to use. Default is \code{ECM}. Other options include \code{ICM}.}
 
 \item{AIC_selection}{logical. Should the global shrinkage parameters be selected with AIC?}
 
-\item{AIC_eps}{if \code{AIC_selection=TRUE}, the convergence tolerance for the AIC convergence assessment}
+\item{AIC_eps}{if \code{AIC_selection=TRUE}, the convergence tolerance for the AIC convergence assessment.}
 
-\item{tau_sq_min}{if \code{AIC_selection=TRUE}, the smallest value of \code{tau_sq} to consider}
+\item{tau_sq_min}{if \code{AIC_selection=TRUE}, the smallest value of \code{tau_sq} to consider.}
 
-\item{tau_sq_stepsize}{if \code{AIC_selection=TRUE}, the step-size to use in the grid for \code{tau_sq}. Optional argument}
+\item{tau_sq_stepsize}{if \code{AIC_selection=TRUE}, the step-size to use in the grid for \code{tau_sq}. Optional argument.}
 
-\item{tau_sq_max}{if \code{AIC_selection=TRUE}, the largest value of \code{tau_sq} to consider}
+\item{tau_sq_max}{if \code{AIC_selection=TRUE}, the largest value of \code{tau_sq} to consider.}
 
-\item{epsilon}{tolerance for the convergence assessment}
+\item{epsilon}{tolerance for the convergence assessment.}
 
-\item{maxitr}{maximum number of iterations}
+\item{maxitr}{maximum number of iterations.}
 
-\item{verbose}{logical indicator of printing information at each iteration}
+\item{verbose}{logical indicator of printing information at each iteration.}
 
-\item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for \eqn{p<200}}
+\item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for \eqn{p<200}.}
 
 \item{group}{grouping information, if variables are grouped. If provided, a vector of length \eqn{p} giving the group of each variable as a string, character or number.}
 
@@ -70,6 +72,10 @@ fastGHS(
 \item{stop_underflow}{should underflow be avoided by never allowing doubles to be smaller than the machine precision?}
 
 \item{weights}{If provided, a vector of length \eqn{n} to weigh the obervations with.}
+
+\item{savepath_tau}{logical indicator of saving the value of \code{tau_sq} at each iteration in the ECM algorithm.}
+
+\item{stop_overflow}{should measures be taken to avoid overflow? Should be set to \code{TRUE} for networks expected to be dense.}
 }
 \value{
 a fitted \code{fastGHS} object

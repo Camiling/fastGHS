@@ -25,7 +25,8 @@ ECM_GHS_AIC(
   machine_eps,
   use_ICM = FALSE,
   GHS_like = FALSE,
-  stop_underflow = FALSE
+  stop_underflow = FALSE,
+  stop_overflow = FALSE
 )
 }
 \arguments{
@@ -68,6 +69,8 @@ ECM_GHS_AIC(
 \item{tau_sq_min}{if AIC_selection == TRUE, the smallest value of tau_sq to consider}
 
 \item{tau_sq_stepsize}{if AIC_selection == TRUE, the step-size to use in the grid for tau_sq. Optional argument}
+
+\item{stop_overflow.}{Should tricks to avoid overflow be used?}
 }
 \value{
 A List with resulting ECM estimates, and saved path and objective function convergence information if requested

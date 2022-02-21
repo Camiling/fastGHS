@@ -12,21 +12,22 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // AIC
-double AIC(arma::mat S, arma::mat theta, int n);
-RcppExport SEXP _fastGHS_AIC(SEXP SSEXP, SEXP thetaSEXP, SEXP nSEXP) {
+double AIC(arma::mat S, arma::mat theta, int n, bool stop_overflow);
+RcppExport SEXP _fastGHS_AIC(SEXP SSEXP, SEXP thetaSEXP, SEXP nSEXP, SEXP stop_overflowSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(AIC(S, theta, n));
+    Rcpp::traits::input_parameter< bool >::type stop_overflow(stop_overflowSEXP);
+    rcpp_result_gen = Rcpp::wrap(AIC(S, theta, n, stop_overflow));
     return rcpp_result_gen;
 END_RCPP
 }
 // ECM_GHS
-List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM, bool fix_tau, bool GHS_like, bool stop_underflow);
-RcppExport SEXP _fastGHS_ECM_GHS(SEXP XSEXP, SEXP SSEXP, SEXP thetaSEXP, SEXP sigmaSEXP, SEXP Lambda_sqSEXP, SEXP epsilonSEXP, SEXP verboseSEXP, SEXP maxitrSEXP, SEXP savepathSEXP, SEXP exist_groupSEXP, SEXP groupSEXP, SEXP N_groupsSEXP, SEXP save_QSEXP, SEXP tau_sqSEXP, SEXP Tau_sqSEXP, SEXP machine_epsSEXP, SEXP use_ICMSEXP, SEXP fix_tauSEXP, SEXP GHS_likeSEXP, SEXP stop_underflowSEXP) {
+List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM, bool fix_tau, bool GHS_like, bool stop_underflow, bool savepath_tau);
+RcppExport SEXP _fastGHS_ECM_GHS(SEXP XSEXP, SEXP SSEXP, SEXP thetaSEXP, SEXP sigmaSEXP, SEXP Lambda_sqSEXP, SEXP epsilonSEXP, SEXP verboseSEXP, SEXP maxitrSEXP, SEXP savepathSEXP, SEXP exist_groupSEXP, SEXP groupSEXP, SEXP N_groupsSEXP, SEXP save_QSEXP, SEXP tau_sqSEXP, SEXP Tau_sqSEXP, SEXP machine_epsSEXP, SEXP use_ICMSEXP, SEXP fix_tauSEXP, SEXP GHS_likeSEXP, SEXP stop_underflowSEXP, SEXP savepath_tauSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -50,13 +51,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type fix_tau(fix_tauSEXP);
     Rcpp::traits::input_parameter< bool >::type GHS_like(GHS_likeSEXP);
     Rcpp::traits::input_parameter< bool >::type stop_underflow(stop_underflowSEXP);
-    rcpp_result_gen = Rcpp::wrap(ECM_GHS(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, fix_tau, GHS_like, stop_underflow));
+    Rcpp::traits::input_parameter< bool >::type savepath_tau(savepath_tauSEXP);
+    rcpp_result_gen = Rcpp::wrap(ECM_GHS(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, fix_tau, GHS_like, stop_underflow, savepath_tau));
     return rcpp_result_gen;
 END_RCPP
 }
 // ECM_GHS_AIC
-List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double AIC_eps, arma::vec tau_sq_vec, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM, bool GHS_like, bool stop_underflow);
-RcppExport SEXP _fastGHS_ECM_GHS_AIC(SEXP XSEXP, SEXP SSEXP, SEXP thetaSEXP, SEXP sigmaSEXP, SEXP Lambda_sqSEXP, SEXP AIC_epsSEXP, SEXP tau_sq_vecSEXP, SEXP epsilonSEXP, SEXP verboseSEXP, SEXP maxitrSEXP, SEXP savepathSEXP, SEXP exist_groupSEXP, SEXP groupSEXP, SEXP N_groupsSEXP, SEXP save_QSEXP, SEXP tau_sqSEXP, SEXP Tau_sqSEXP, SEXP machine_epsSEXP, SEXP use_ICMSEXP, SEXP GHS_likeSEXP, SEXP stop_underflowSEXP) {
+List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double AIC_eps, arma::vec tau_sq_vec, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM, bool GHS_like, bool stop_underflow, bool stop_overflow);
+RcppExport SEXP _fastGHS_ECM_GHS_AIC(SEXP XSEXP, SEXP SSEXP, SEXP thetaSEXP, SEXP sigmaSEXP, SEXP Lambda_sqSEXP, SEXP AIC_epsSEXP, SEXP tau_sq_vecSEXP, SEXP epsilonSEXP, SEXP verboseSEXP, SEXP maxitrSEXP, SEXP savepathSEXP, SEXP exist_groupSEXP, SEXP groupSEXP, SEXP N_groupsSEXP, SEXP save_QSEXP, SEXP tau_sqSEXP, SEXP Tau_sqSEXP, SEXP machine_epsSEXP, SEXP use_ICMSEXP, SEXP GHS_likeSEXP, SEXP stop_underflowSEXP, SEXP stop_overflowSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -81,15 +83,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type use_ICM(use_ICMSEXP);
     Rcpp::traits::input_parameter< bool >::type GHS_like(GHS_likeSEXP);
     Rcpp::traits::input_parameter< bool >::type stop_underflow(stop_underflowSEXP);
-    rcpp_result_gen = Rcpp::wrap(ECM_GHS_AIC(X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, GHS_like, stop_underflow));
+    Rcpp::traits::input_parameter< bool >::type stop_overflow(stop_overflowSEXP);
+    rcpp_result_gen = Rcpp::wrap(ECM_GHS_AIC(X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, GHS_like, stop_underflow, stop_overflow));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_fastGHS_AIC", (DL_FUNC) &_fastGHS_AIC, 3},
-    {"_fastGHS_ECM_GHS", (DL_FUNC) &_fastGHS_ECM_GHS, 20},
-    {"_fastGHS_ECM_GHS_AIC", (DL_FUNC) &_fastGHS_ECM_GHS_AIC, 21},
+    {"_fastGHS_AIC", (DL_FUNC) &_fastGHS_AIC, 4},
+    {"_fastGHS_ECM_GHS", (DL_FUNC) &_fastGHS_ECM_GHS, 21},
+    {"_fastGHS_ECM_GHS_AIC", (DL_FUNC) &_fastGHS_ECM_GHS_AIC, 22},
     {NULL, NULL, 0}
 };
 

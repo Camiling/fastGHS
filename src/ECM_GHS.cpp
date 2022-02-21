@@ -41,12 +41,14 @@ using namespace arma;
 //' @param Tau_sq if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided
 //' @param machine_eps numerical. The machine precision
 //' @param use_ICM logical. Should ICM be used instead of ECM? Default value is false
+//' @param fix_tau should tau_sq be fixed?
+//' @param savepath_tau if fix_tau==F, should its path be saved?
 //' 
 //' @return A List with resulting ECM estimates, and saved path and objective function convergence information if requested
 //' 
 //' @export
 // [[Rcpp::export]]
-List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM=false, bool fix_tau = false, bool GHS_like = false, bool stop_underflow=false) {
+List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM=false, bool fix_tau = false, bool GHS_like = false, bool stop_underflow=false, bool savepath_tau=false) {
 
   // get dimensions
   const int M = X.n_cols;
@@ -61,6 +63,7 @@ List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::m
     save_dim = 1;
   }
   arma::cube theta_path(M, M, save_dim);
+  arma::vec tau_sq_all(maxitr);
   arma::vec Q_vals(maxitr);
   double Q_val_old= -numeric_limits<double>::max();
   double Q_val_new;
@@ -87,6 +90,9 @@ List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::m
  
   if(savepath){
     theta_path.slice(0) = theta;
+  }
+  if(savepath_tau){
+    tau_sq_all(0) = tau_sq;
   }
     
   while(eps>epsilon & count < maxitr){
@@ -148,10 +154,13 @@ List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::m
     if(savepath){
       theta_path.slice(count+1) = theta_update;
     }
+    if(savepath_tau){
+      tau_sq_all(count+1)=tau_sq;
+    }
     // Evaluate objective function if ICM is used, or if it is to be saved
     if((use_ICM || save_Q) & (exist_group>0)){
       Q_val_new = Q_val(N, M, theta, S, Lambda_sq, E_NuInv, exist_group, group, Tau_sq, E_XiInv); 
-    }else if (use_ICM || save_Q) {
+    } else if (use_ICM || save_Q) {
       Q_val_new = Q_val(N, M, theta, S, Lambda_sq, E_NuInv, exist_group, group, S, S, tau_sq, E_xiInv);  // Pass S as dummy argument
     }
     // If ICM is used, check that objective function value has increased
@@ -218,6 +227,10 @@ List ECM_GHS(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::m
   
   if(savepath){
     list["theta_path"] = theta_path;
+  }
+  if(savepath_tau){
+    list["count"] = count;
+    list["tau_sq_path"] = tau_sq_all;
   }
   return list;
 }

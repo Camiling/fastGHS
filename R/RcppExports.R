@@ -8,12 +8,13 @@
 #' @param S \eqn{p} by \eqn{p} scatter matrix of the data
 #' @param theta estimated \eqn{p} by \eqn{p} precision matrix
 #' @param n the number of observations
+#' @param stop_overflow should overflow be avoided?
 #' 
 #' @return The AIC score of the estimated precision matrix
 #' 
 #' @export
-AIC <- function(S, theta, n) {
-    .Call(`_fastGHS_AIC`, S, theta, n)
+AIC <- function(S, theta, n, stop_overflow) {
+    .Call(`_fastGHS_AIC`, S, theta, n, stop_overflow)
 }
 
 #' Perform GHS with ECM
@@ -37,12 +38,14 @@ AIC <- function(S, theta, n) {
 #' @param Tau_sq if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided
 #' @param machine_eps numerical. The machine precision
 #' @param use_ICM logical. Should ICM be used instead of ECM? Default value is false
+#' @param fix_tau should tau_sq be fixed?
+#' @param savepath_tau if fix_tau==F, should its path be saved?
 #' 
 #' @return A List with resulting ECM estimates, and saved path and objective function convergence information if requested
 #' 
 #' @export
-ECM_GHS <- function(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE) {
-    .Call(`_fastGHS_ECM_GHS`, X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, fix_tau, GHS_like, stop_underflow)
+ECM_GHS <- function(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE, savepath_tau = FALSE) {
+    .Call(`_fastGHS_ECM_GHS`, X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, fix_tau, GHS_like, stop_underflow, savepath_tau)
 }
 
 #' Perform GHS with ECM, selecting tau_sq by AIC
@@ -69,11 +72,12 @@ ECM_GHS <- function(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, sav
 #' @param Tau_sq if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided
 #' @param machine_eps numerical. The machine precision
 #' @param use_ICM logical. Should ICM be used instead of ECM? Default value is false
+#' @param stop_overflow. Should tricks to avoid overflow be used?
 #' 
 #' @return A List with resulting ECM estimates, and saved path and objective function convergence information if requested
 #' 
 #' @export
-ECM_GHS_AIC <- function(X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, GHS_like = FALSE, stop_underflow = FALSE) {
-    .Call(`_fastGHS_ECM_GHS_AIC`, X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, GHS_like, stop_underflow)
+ECM_GHS_AIC <- function(X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, GHS_like = FALSE, stop_underflow = FALSE, stop_overflow = FALSE) {
+    .Call(`_fastGHS_ECM_GHS_AIC`, X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, GHS_like, stop_underflow, stop_overflow)
 }
 

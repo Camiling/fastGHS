@@ -24,7 +24,8 @@ ECM_GHS(
   use_ICM = FALSE,
   fix_tau = FALSE,
   GHS_like = FALSE,
-  stop_underflow = FALSE
+  stop_underflow = FALSE,
+  savepath_tau = FALSE
 )
 }
 \arguments{
@@ -61,6 +62,10 @@ ECM_GHS(
 \item{machine_eps}{numerical. The machine precision}
 
 \item{use_ICM}{logical. Should ICM be used instead of ECM? Default value is false}
+
+\item{fix_tau}{should tau_sq be fixed?}
+
+\item{savepath_tau}{if fix_tau==F, should its path be saved?}
 }
 \value{
 A List with resulting ECM estimates, and saved path and objective function convergence information if requested

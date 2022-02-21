@@ -45,12 +45,13 @@ using namespace arma;
 //' @param Tau_sq if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided
 //' @param machine_eps numerical. The machine precision
 //' @param use_ICM logical. Should ICM be used instead of ECM? Default value is false
+//' @param stop_overflow. Should tricks to avoid overflow be used?
 //' 
 //' @return A List with resulting ECM estimates, and saved path and objective function convergence information if requested
 //' 
 //' @export
 // [[Rcpp::export]]
-List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double AIC_eps, arma::vec tau_sq_vec, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM=false, bool GHS_like = false, bool stop_underflow=false){
+List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arma::mat Lambda_sq, double AIC_eps, arma::vec tau_sq_vec, double epsilon, bool verbose, int maxitr, bool savepath, int exist_group, arma::uvec group, arma::mat N_groups, bool save_Q, double tau_sq, arma::mat Tau_sq, double machine_eps, bool use_ICM=false, bool GHS_like = false, bool stop_underflow=false, bool stop_overflow=false){
   
   // Get dimensions
   const int N = X.n_rows;
@@ -74,10 +75,10 @@ List ECM_GHS_AIC(arma::mat X, arma::mat S, arma::mat theta, arma::mat sigma, arm
     tau_sq_val = tau_sq_vec(count);
     
     // Use ECM_GHS with current tau_sq value
-    res_GHS = ECM_GHS(X, S, theta, sigma, Lambda_sq, epsilon, false, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq_val, Tau_sq, machine_eps, use_ICM, true, GHS_like, stop_underflow);  
+    res_GHS = ECM_GHS(X, S, theta, sigma, Lambda_sq, epsilon, false, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq_val, Tau_sq, machine_eps, use_ICM, true, GHS_like, stop_underflow, stop_overflow);  
     
     // Compute AIC score
-    AIC_update = AIC(S, res_GHS["theta"], N);
+    AIC_update = AIC(S, res_GHS["theta"], N, stop_overflow);
     AIC_scores(count) = AIC_update;
     
     // Change in AIC score

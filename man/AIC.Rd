@@ -4,7 +4,7 @@
 \alias{AIC}
 \title{Compute AIC score of an estimated precision matrix}
 \usage{
-AIC(S, theta, n)
+AIC(S, theta, n, stop_overflow)
 }
 \arguments{
 \item{S}{\eqn{p} by \eqn{p} scatter matrix of the data}
@@ -12,6 +12,8 @@ AIC(S, theta, n)
 \item{theta}{estimated \eqn{p} by \eqn{p} precision matrix}
 
 \item{n}{the number of observations}
+
+\item{stop_overflow}{should overflow be avoided?}
 }
 \value{
 The AIC score of the estimated precision matrix

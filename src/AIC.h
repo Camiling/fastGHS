@@ -10,5 +10,5 @@ using namespace Rcpp;
 using namespace arma;
 
 
-double AIC(mat S, mat theta, int n);
+double AIC(mat S, mat theta, int n, bool stop_overflow);
 #endif
