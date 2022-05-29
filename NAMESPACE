@@ -1,4 +1,5 @@
 useDynLib(fastGHS, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
 importFrom(Rcpp, evalCpp)
+importFrom("stats", "runif")
 export(fastGHS)

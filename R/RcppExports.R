@@ -30,22 +30,18 @@ AIC <- function(S, theta, n, stop_overflow) {
 #' @param verbose logical indicator of printing information at each iteration
 #' @param maxitr maximum number of iterations
 #' @param savepath logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for p<200
-#' @param exist_group logical. Are the variables grouped?
-#' @param group grouping information.
-#' @param N_groups If exist_group==T, the number of groups
 #' @param save_Q should the value of the objective function at each step be saved?
 #' @param tau_sq initial value of squared global shrinkage parameter. If exist_group==T, a dummy value should be provided
-#' @param Tau_sq if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided
 #' @param machine_eps numerical. The machine precision
-#' @param use_ICM logical. Should ICM be used instead of ECM? Default value is false
 #' @param fix_tau should tau_sq be fixed?
 #' @param savepath_tau if fix_tau==F, should its path be saved?
+#' @param stop_underflow Should tricks to avoid underflow be used?
 #' 
 #' @return A List with resulting ECM estimates, and saved path and objective function convergence information if requested
 #' 
 #' @export
-ECM_GHS <- function(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, fix_tau = FALSE, GHS_like = FALSE, stop_underflow = FALSE, savepath_tau = FALSE) {
-    .Call(`_fastGHS_ECM_GHS`, X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, fix_tau, GHS_like, stop_underflow, savepath_tau)
+ECM_GHS <- function(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, save_Q, tau_sq, machine_eps, fix_tau = FALSE, stop_underflow = FALSE, savepath_tau = FALSE) {
+    .Call(`_fastGHS_ECM_GHS`, X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, savepath, save_Q, tau_sq, machine_eps, fix_tau, stop_underflow, savepath_tau)
 }
 
 #' Perform GHS with ECM, selecting tau_sq by AIC
@@ -58,26 +54,21 @@ ECM_GHS <- function(X, S, theta, sigma, Lambda_sq, epsilon, verbose, maxitr, sav
 #' @param sigma initial value of the \eqn{p} by \eqn{p} covariance matrix
 #' @param Lambda_sq initial value of matrix of squared local shrinkage parameters
 #' @param AIC_eps if AIC_selection == TRUE, the convergence tolerance for the AIC convergence assessment
-#' @param tau_sq_min if AIC_selection == TRUE, the smallest value of tau_sq to consider  
-#' @param tau_sq_stepsize if AIC_selection == TRUE, the step-size to use in the grid for tau_sq. Optional argument
+#' @param tau_sq_vec values of tau_sq to consider  
 #' @param epsilon tolerance for the convergence assessment
 #' @param verbose logical indicator of printing information at each iteration
 #' @param maxitr maximum number of iterations
 #' @param savepath logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for p<200
-#' @param exist_group logical. Are the variables grouped?
-#' @param group grouping information.
-#' @param N_groups If exist_group==T, the number of groups
 #' @param save_Q should the value of the objective function at each step be saved?
 #' @param tau_sq initial value of squared global shrinkage parameter. If exist_group==T, a dummy value should be provided
-#' @param Tau_sq if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided
 #' @param machine_eps numerical. The machine precision
-#' @param use_ICM logical. Should ICM be used instead of ECM? Default value is false
-#' @param stop_overflow. Should tricks to avoid overflow be used?
+#' @param stop_underflow Should tricks to avoid underflow be used?
+#' @param stop_overflow Should tricks to avoid overflow be used?
 #' 
 #' @return A List with resulting ECM estimates, and saved path and objective function convergence information if requested
 #' 
 #' @export
-ECM_GHS_AIC <- function(X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM = FALSE, GHS_like = FALSE, stop_underflow = FALSE, stop_overflow = FALSE) {
-    .Call(`_fastGHS_ECM_GHS_AIC`, X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, exist_group, group, N_groups, save_Q, tau_sq, Tau_sq, machine_eps, use_ICM, GHS_like, stop_underflow, stop_overflow)
+ECM_GHS_AIC <- function(X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, save_Q, tau_sq, machine_eps, stop_underflow = FALSE, stop_overflow = FALSE) {
+    .Call(`_fastGHS_ECM_GHS_AIC`, X, S, theta, sigma, Lambda_sq, AIC_eps, tau_sq_vec, epsilon, verbose, maxitr, savepath, save_Q, tau_sq, machine_eps, stop_underflow, stop_overflow)
 }
 

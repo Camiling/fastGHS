@@ -14,16 +14,10 @@ ECM_GHS(
   verbose,
   maxitr,
   savepath,
-  exist_group,
-  group,
-  N_groups,
   save_Q,
   tau_sq,
-  Tau_sq,
   machine_eps,
-  use_ICM = FALSE,
   fix_tau = FALSE,
-  GHS_like = FALSE,
   stop_underflow = FALSE,
   savepath_tau = FALSE
 )
@@ -47,23 +41,15 @@ ECM_GHS(
 
 \item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for p<200}
 
-\item{exist_group}{logical. Are the variables grouped?}
-
-\item{group}{grouping information.}
-
-\item{N_groups}{If exist_group==T, the number of groups}
-
 \item{save_Q}{should the value of the objective function at each step be saved?}
 
 \item{tau_sq}{initial value of squared global shrinkage parameter. If exist_group==T, a dummy value should be provided}
 
-\item{Tau_sq}{if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided}
-
 \item{machine_eps}{numerical. The machine precision}
 
-\item{use_ICM}{logical. Should ICM be used instead of ECM? Default value is false}
-
 \item{fix_tau}{should tau_sq be fixed?}
+
+\item{stop_underflow}{Should tricks to avoid underflow be used?}
 
 \item{savepath_tau}{if fix_tau==F, should its path be saved?}
 }

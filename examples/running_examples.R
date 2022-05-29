@@ -2,14 +2,14 @@ library(fastGHS)
 library(huge)
 library(glasso)
 library(igraph)
-library(tailoredGlasso)
-source('examples/GHS.r')
+library(tailoredGlasso) # Downloaded from Github/Camiling/tailoredGlasso
+source('examples/GHS.R')
 
 ## Test fastGHS with AIC selection of taus
 
 
 # EXAMPLE 1 ------------------------------------------------------------------
-# GENERATE GRAPH with tau fixed: n=100, p=50, larger partial correlations (0.229)
+# GENERATE GRAPH: n=100, p=50, larger partial correlations (0.229)
 
 n.fix=100
 p.fix=50

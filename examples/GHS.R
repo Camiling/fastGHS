@@ -64,8 +64,21 @@ GHS =  function(S,n,burnin=500,nmc=3000){
       }, error = function(e) {
         return(list(inv_C,s_21))
       })
+      if(is.list(mu_i)) {
+        cat('Error: system became singular')
+        return(mu_i)
+      }
       #mu_i = -solve(inv_C,s_21)
-      beta = mu_i+ solve(inv_C_chol,rnorm(p-1))
+      beta= tryCatch({
+        mu_i+ solve(inv_C_chol,rnorm(p-1))
+      }, error = function(e) {
+        return(list(mu_i,inv_C_chol))
+      })
+      if(is.list(beta)){
+        cat('Error: system became singular')
+        return(beta)
+      }
+      #beta = mu_i+ solve(inv_C_chol,rnorm(p-1))
       #kkk=c(0.1156077, 1.7215140, 0.10147592)
       #beta = mu_i+ solve(inv_C_chol,kkk)
       omega_12 = beta

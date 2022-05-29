@@ -7,7 +7,7 @@ using namespace std;
 using namespace arma;
 using namespace Rcpp;
 
-cube M_theta(int N, int M, mat theta, mat &S, mat sigma, mat &Lambda_sq, uvec pseq, int exist_group, uvec &group, mat Tau_sq, double machine_eps,bool stop_underflow, double tau_sq, bool GHS_like) {
+cube M_theta(int N, int M, mat theta, mat &S, mat sigma, mat &Lambda_sq, uvec pseq, double machine_eps,bool stop_underflow, double tau_sq) {
   
   // Return a MxMx2 cube with theta and sigma
   cube res(M,M,2);
@@ -29,7 +29,6 @@ cube M_theta(int N, int M, mat theta, mat &S, mat sigma, mat &Lambda_sq, uvec ps
   
   // Diagonal matrices
   mat Lambda_diag  = zeros<mat>(M-1,M-1);
- 
   mat Tau_diag = zeros<mat>(M-1,M-1);
   
   // Some additional quantities
@@ -37,7 +36,6 @@ cube M_theta(int N, int M, mat theta, mat &S, mat sigma, mat &Lambda_sq, uvec ps
   mat theta_prod_vec(M-1,1);
   
   mat theta_mi_mi_Inv(M-1,M-1);
-  mat Tau_G = Tau_sq.submat(group,group); // MxM mat containing tau of each variable combination
   for(i = 0; i < M; i++){
     remove_i = find(pseq != i);
     left_i(0) = i;
@@ -49,26 +47,11 @@ cube M_theta(int N, int M, mat theta, mat &S, mat sigma, mat &Lambda_sq, uvec ps
     S_i_mi = S.submat(remove_i, left_i); 
     S_i_i = S.submat(left_i, left_i); 
     Lambda_sq_i_mi = Lambda_sq.submat(remove_i,left_i);
-    Tau_sq_i_mi = Tau_G.submat(remove_i,left_i);
     // Find inverse of theta submatrix
     theta_mi_mi_Inv = sigma_mi_mi - sigma_i_mi*sigma_i_mi.t()/sigma_i_i(0,0);
     
-    if(GHS_like==true){
-      Lambda_diag.diag() = Lambda_sq_i_mi;
-    }
-    else {
-      Lambda_diag.diag() = 1/Lambda_sq_i_mi;
-    }
-    
-    
-    if (exist_group){
-      // Find Tau matrix of all group combinations. 
-      Tau_diag.diag() = 1/Tau_G.submat(remove_i,left_i);
-      theta_i_mi = -inv(S_i_i(0,0)*theta_mi_mi_Inv + Lambda_diag*Tau_diag)*S_i_mi;
-    }else {
-      theta_i_mi = -inv(S_i_i(0,0)*theta_mi_mi_Inv + Lambda_diag/tau_sq)*S_i_mi;
-    }
-    
+    Lambda_diag.diag() = 1/Lambda_sq_i_mi;
+    theta_i_mi = -inv(S_i_i(0,0)*theta_mi_mi_Inv + Lambda_diag/tau_sq)*S_i_mi;
     theta_i_i = theta_i_mi.t()*theta_mi_mi_Inv*theta_i_mi + M/S_i_i(0,0);
      
     // Avoid computing these quantities multiple times

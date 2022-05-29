@@ -6,32 +6,33 @@
 \usage{
 fastGHS(
   X,
+  epsilon = 1e-05,
+  AIC_eps = 0.1,
   theta = NULL,
   sigma = NULL,
   Lambda_sq = NULL,
   tau_sq = NULL,
-  method = "ECM",
-  AIC_selection = FALSE,
-  AIC_eps = 0.1,
   tau_sq_min = 1e-04,
   tau_sq_stepsize = NULL,
   tau_sq_max = 20,
-  epsilon = 1e-05,
+  stop_overflow = FALSE,
   maxitr = 10000,
   verbose = TRUE,
   savepath = FALSE,
-  group = NULL,
   save_Q = F,
   fix_tau = FALSE,
-  GHS_like = FALSE,
+  AIC_selection = FALSE,
   stop_underflow = FALSE,
   weights = NA,
-  savepath_tau = FALSE,
-  stop_overflow = FALSE
+  savepath_tau = FALSE
 )
 }
 \arguments{
 \item{X}{\eqn{n} by \eqn{p} matrix of data.}
+
+\item{epsilon}{tolerance for the convergence assessment.}
+
+\item{AIC_eps}{if \code{AIC_selection=TRUE}, the convergence tolerance for the AIC convergence assessment.}
 
 \item{theta}{initial value of the \eqn{p} by \eqn{p} precision matrix.}
 
@@ -39,13 +40,7 @@ fastGHS(
 
 \item{Lambda_sq}{initial value of matrix of squared local shrinkage parameters.}
 
-\item{tau_sq}{initial value of squared global shrinkage parameter. If variables are grouped, an \eqn{ngroup} by \eqn{ngroup} matrix.}
-
-\item{method}{the method to use. Default is \code{ECM}. Other options include \code{ICM}.}
-
-\item{AIC_selection}{logical. Should the global shrinkage parameters be selected with AIC?}
-
-\item{AIC_eps}{if \code{AIC_selection=TRUE}, the convergence tolerance for the AIC convergence assessment.}
+\item{tau_sq}{initial value of squared global shrinkage parameter. Not used if \code{AIC_selection=TRUE}.}
 
 \item{tau_sq_min}{if \code{AIC_selection=TRUE}, the smallest value of \code{tau_sq} to consider.}
 
@@ -53,7 +48,7 @@ fastGHS(
 
 \item{tau_sq_max}{if \code{AIC_selection=TRUE}, the largest value of \code{tau_sq} to consider.}
 
-\item{epsilon}{tolerance for the convergence assessment.}
+\item{stop_overflow}{should measures be taken to avoid overflow? Should be set to \code{TRUE} for networks expected to be dense.}
 
 \item{maxitr}{maximum number of iterations.}
 
@@ -61,21 +56,17 @@ fastGHS(
 
 \item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for \eqn{p<200}.}
 
-\item{group}{grouping information, if variables are grouped. If provided, a vector of length \eqn{p} giving the group of each variable as a string, character or number.}
-
 \item{save_Q}{should the value of the objective function at each step be saved?}
 
 \item{fix_tau}{logical. Should \code{tau_sq} be fixed?}
 
-\item{GHS_like}{logical. Should the GHS-like penalty be used?}
+\item{AIC_selection}{logical. Should the global shrinkage parameters be selected with AIC? Default \code{TRUE}.}
 
 \item{stop_underflow}{should underflow be avoided by never allowing doubles to be smaller than the machine precision?}
 
-\item{weights}{If provided, a vector of length \eqn{n} to weigh the obervations with.}
+\item{weights}{If provided, a vector of length \eqn{n} to weigh the observations with.}
 
 \item{savepath_tau}{logical indicator of saving the value of \code{tau_sq} at each iteration in the ECM algorithm.}
-
-\item{stop_overflow}{should measures be taken to avoid overflow? Should be set to \code{TRUE} for networks expected to be dense.}
 }
 \value{
 a fitted \code{fastGHS} object

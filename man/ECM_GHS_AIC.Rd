@@ -16,15 +16,9 @@ ECM_GHS_AIC(
   verbose,
   maxitr,
   savepath,
-  exist_group,
-  group,
-  N_groups,
   save_Q,
   tau_sq,
-  Tau_sq,
   machine_eps,
-  use_ICM = FALSE,
-  GHS_like = FALSE,
   stop_underflow = FALSE,
   stop_overflow = FALSE
 )
@@ -42,6 +36,8 @@ ECM_GHS_AIC(
 
 \item{AIC_eps}{if AIC_selection == TRUE, the convergence tolerance for the AIC convergence assessment}
 
+\item{tau_sq_vec}{values of tau_sq to consider}
+
 \item{epsilon}{tolerance for the convergence assessment}
 
 \item{verbose}{logical indicator of printing information at each iteration}
@@ -50,27 +46,15 @@ ECM_GHS_AIC(
 
 \item{savepath}{logical indicator of saving the estimator at each iteration in the ECM algorithm. Only available for p<200}
 
-\item{exist_group}{logical. Are the variables grouped?}
-
-\item{group}{grouping information.}
-
-\item{N_groups}{If exist_group==T, the number of groups}
-
 \item{save_Q}{should the value of the objective function at each step be saved?}
 
 \item{tau_sq}{initial value of squared global shrinkage parameter. If exist_group==T, a dummy value should be provided}
 
-\item{Tau_sq}{if exist_group==T, an \eqn{ngroup} by \eqn{ngroup} matrix of initial values of the squared global shrinkage parameters within and between groups. If exist_group==F, a dummy value should be provided}
-
 \item{machine_eps}{numerical. The machine precision}
 
-\item{use_ICM}{logical. Should ICM be used instead of ECM? Default value is false}
+\item{stop_underflow}{Should tricks to avoid underflow be used?}
 
-\item{tau_sq_min}{if AIC_selection == TRUE, the smallest value of tau_sq to consider}
-
-\item{tau_sq_stepsize}{if AIC_selection == TRUE, the step-size to use in the grid for tau_sq. Optional argument}
-
-\item{stop_overflow.}{Should tricks to avoid overflow be used?}
+\item{stop_overflow}{Should tricks to avoid overflow be used?}
 }
 \value{
 A List with resulting ECM estimates, and saved path and objective function convergence information if requested
